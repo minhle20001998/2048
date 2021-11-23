@@ -11,7 +11,8 @@ class game {
         ];
         this.hasChange = false;
         this.currentScore = 0;
-        this.maxScore = localStorage.getItem('maxScore');;
+        this.maxScore = localStorage.getItem('maxScore');
+        this.alert = document.querySelector(".alert");
         this.addNum();
         this.addNum();
         this.draw();
@@ -25,9 +26,30 @@ class game {
         this.canvas.width = 400;
         this.canvas.height = 400;
         document.querySelector('.board').appendChild(this.canvas);
+        this.reloadButton = document.querySelector(".reload-btn");
+        this.reloadButton.addEventListener('click', () => {
+            if (!this.alert.className.includes("d-none")) {
+                this.alert.classList.add("d-none");
+                this.grid = [
+                    [0, 0, 0, 0],
+                    [0, 0, 0, 0],
+                    [0, 0, 0, 0],
+                    [0, 0, 0, 0]
+                ];
+                this.addNum();
+                this.addNum();
+                this.draw();
+            }
+        })
     }
 
     draw() {
+        let isLost = this.checkLose();
+        if (isLost) {
+            if (this.alert.className.includes("d-none"))
+                this.alert.classList.remove("d-none");
+        }
+
         this.context.clearRect(0, 0, 400, 400);
         for (let i = 0; i < 5; i++) {
             for (let j = 0; j < 5; j++) {
@@ -101,6 +123,25 @@ class game {
                 }
             }
         }
+    }
+
+    checkLose() {
+        let lose = 0;
+        for (let i = 0; i < 4; i++) {
+            for (let j = 0; j < 4; j++) {
+                let current = this.grid[i][j];
+                let top = (i - 1 >= 0) ? this.grid[i - 1][j] : null;
+                let right = (j + 1 < 4) ? this.grid[i][j + 1] : null;
+                let bottom = (i + 1 < 4) ? this.grid[i + 1][j] : null;
+                let left = (j - 1 >= 0) ? this.grid[i][j - 1] : null;
+                if (current != 0 && top != 0 && right != 0 && bottom != 0 && left != 0) {
+                    if (current != top && current != right && current != bottom && current != left) {
+                        lose++;
+                    }
+                }
+            }
+        }
+        return lose == 16;
     }
 
     addNum() {
