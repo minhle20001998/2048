@@ -1,3 +1,4 @@
+//hemlo`
 class game {
     constructor() {
         this.canvas = null;
