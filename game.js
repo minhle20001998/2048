@@ -1,4 +1,4 @@
-//hemlo`
+//hemlo`brbr
 class game {
     constructor() {
         this.canvas = null;
